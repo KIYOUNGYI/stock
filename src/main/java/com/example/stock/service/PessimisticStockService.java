@@ -1,39 +1,25 @@
 package com.example.stock.service;
 
 import com.example.stock.domain.Stock;
-import com.example.stock.dto.StockDTO;
 import com.example.stock.repository.StockRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
-public class StockService {
+public class PessimisticStockService {
 
   private final StockRepository stockRepository;
 
   @Transactional
-  public synchronized void decrease(Long id, Long quantity) {
-
-      //get stock
-      //재고감소
-      //저장
-
-    Stock stock = stockRepository.findById(id).orElseThrow();
-
+  public void decrease(Long id, Long quantity) {
+    log.info("decrease() ");
+    Stock stock = stockRepository.findByIdWithPessimisticLock(id);
     stock.decrease(quantity);
-
     stockRepository.saveAndFlush(stock);
+
   }
-
-  @Transactional
-  public StockDTO getStock(Long id) {
-
-    Stock stock = stockRepository.findByProductId(id);
-
-    return new StockDTO(stock.getId(), stock.getProductId(), stock.getQuantity());
-  }
-
-
 }
