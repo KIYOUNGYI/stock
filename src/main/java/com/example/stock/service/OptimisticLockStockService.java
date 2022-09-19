@@ -14,26 +14,16 @@ public class OptimisticLockStockService {
   private final StockRepository stockRepository;
 
   @Transactional
-  public synchronized void decrease(Long id, Long quantity) {
+  public void decrease(Long id, Long quantity) {
 
-      //get stock
-      //재고감소
-      //저장
-
-    Stock stock = stockRepository.findById(id).orElseThrow();
+    //get stock
+    //재고감소
+    //저장
+    Stock stock = stockRepository.findByIdWithOptimisticLock(id);
 
     stock.decrease(quantity);
 
-    stockRepository.saveAndFlush(stock);
+//    stockRepository.save(stock);
   }
-
-  @Transactional
-  public StockDTO getStock(Long id) {
-
-    Stock stock = stockRepository.findByProductId(id);
-
-    return new StockDTO(stock.getId(), stock.getProductId(), stock.getQuantity());
-  }
-
 
 }
