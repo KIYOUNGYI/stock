@@ -5,6 +5,7 @@ import com.example.stock.dto.StockDTO;
 import com.example.stock.repository.StockRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -27,6 +28,15 @@ public class StockService {
     stockRepository.saveAndFlush(stock);
   }
 
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
+  public void decreasePropagationRequiresNew(Long id, Long quantity) {
+    Stock stock = stockRepository.findById(id).orElseThrow();
+
+    stock.decrease(quantity);
+
+    stockRepository.saveAndFlush(stock);
+  }
+
   @Transactional
   public StockDTO getStock(Long id) {
 
@@ -34,6 +44,5 @@ public class StockService {
 
     return new StockDTO(stock.getId(), stock.getProductId(), stock.getQuantity());
   }
-
 
 }
