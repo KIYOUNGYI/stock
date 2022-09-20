@@ -49,7 +49,7 @@ class PessimisticStockServiceTest {
   public void 동시에_100개의_요청() throws InterruptedException {
 
     int threadCount = 100;
-    ExecutorService executorService = Executors.newFixedThreadPool(32);
+    ExecutorService executorService = Executors.newFixedThreadPool(16);
     // 100개 요청 끝날때까지 기달려야 하므로 countLatch 사용
     // countdown latch 는 단일스레드에서 수행중인 작업이 완료될 때까지 대기할 수 있도록 도와주는 클래스
 
