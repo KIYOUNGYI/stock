@@ -26,11 +26,11 @@ class OptimisticStockServiceTest {
   @Autowired
   private StockRepository stockRepository;
 
-//  @BeforeEach
-//  public void before() {
-//    Stock stock = new Stock(1l, 100l);
-//    stockRepository.save(stock);
-//  }
+  @BeforeEach
+  public void before() {
+    Stock stock = new Stock(1l, 100l);
+    stockRepository.save(stock);
+  }
 
   @AfterEach
   public void after() {

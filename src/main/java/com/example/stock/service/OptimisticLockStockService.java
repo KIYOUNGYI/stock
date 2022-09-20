@@ -4,9 +4,13 @@ import com.example.stock.domain.Stock;
 import com.example.stock.dto.StockDTO;
 import com.example.stock.repository.StockRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OptimisticLockStockService {
@@ -16,6 +20,8 @@ public class OptimisticLockStockService {
   @Transactional
   public void decrease(Long id, Long quantity) {
 
+//    Optional<Stock> stockVal = stockRepository.findById(id);
+//    log.info("=> stockVal : {}", stockVal.isPresent());
     //get stock
     //재고감소
     //저장
@@ -23,7 +29,7 @@ public class OptimisticLockStockService {
 
     stock.decrease(quantity);
 
-//    stockRepository.save(stock);
+    stockRepository.save(stock);// 그런데
   }
 
 }
