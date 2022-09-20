@@ -5,7 +5,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import lombok.Getter;
-//import org.springframework.data.annotation.Version;
 import javax.persistence.Version;
 
 @Entity
