@@ -17,4 +17,5 @@ public interface StockRepository extends JpaRepository<Stock, Long> {
   Stock findByIdWithOptimisticLock(Long id);
 
   Stock findByProductId(Long idProduct);
+
 }
