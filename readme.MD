@@ -47,3 +47,22 @@ pessimistic Lock 의 장점
 
 optimistic lock 
 - 실제로 락을 이용하지 않고 버전을 이용해서 정합성을 맞추는 것 ()
+
+## redis
+
+- Lettuce
+  - setnx 명령어를 활용하여 분산락 구현  (setnx -> set if not exist 줄임말, 키 없을때만 set 하는 명령어)
+  - spin lock 방식  (retry 로직 개발자가 작성해야 함 -> 락을 획득하려는 스레드가 락을 사용할 수 있는지 반복하면서 락 획득을 시도하는 방식)
+- Redisson
+  - pub-sub 기반으로 Lock 구현 제공 (채널 하나 만들고 락을 점유중인 스레드가 락을 획득하려고 대기중인 스레드에게 해제를 알려주면 안내를 받은 스레드가 락 획득 시도하는 방식)
+  - (스레드-1) 나 끝났어 ==> 채널 (락 획득 시도해 하고 스레드 2에 알려줌) -> (스레드 2)
+
+
+```shell
+setnx 1 lock
+```
+
+```shell
+MISCONF Redis is configured to save RDB snapshots, but it is currently not able to persist on disk. Commands that may modify the data set are disabled, because this instance is configured to report errors during writes if RDB snapshotting fails (stop-writes-on-bgsave-error option). Please check the Redis logs for details about the RDB error.
+```
+
