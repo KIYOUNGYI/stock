@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 /**
- * b> synchronized 를 붙인 경우
+ * c> transactional 을 붙인 경우
  */
 @SpringBootTest
 class StockServiceTest {
