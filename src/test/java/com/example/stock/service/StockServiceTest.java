@@ -3,17 +3,21 @@ package com.example.stock.service;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.example.stock.domain.Stock;
-import com.example.stock.repository.StockRepository;
+
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import com.example.stock.repository.StockRepository;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+/**
+ * a> race-condition 발생하는 상황
+ */
 @SpringBootTest
 class StockServiceTest {
 
@@ -49,6 +53,7 @@ class StockServiceTest {
   @Test
   public void 동시에_100개의_요청() throws InterruptedException {
 
+    //100개의 요청을 보낼 것이므로
     int threadCount = 100;
     ExecutorService executorService = Executors.newFixedThreadPool(32);
     // 100개 요청 끝날때까지 기달려야 하므로 countLatch 사용
@@ -59,13 +64,11 @@ class StockServiceTest {
     for (int i = 0; i < threadCount; i++) {
       executorService.submit(
           () -> {
-
             try {
               stockService.decrease(1l, 1l);
             } finally {
               latch.countDown();
             }
-
           }
       );
     }

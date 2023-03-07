@@ -1,48 +1,26 @@
 package com.example.stock.service;
 
 import com.example.stock.domain.Stock;
-import com.example.stock.dto.StockDTO;
 import com.example.stock.repository.StockRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@RequiredArgsConstructor
 public class StockService {
 
-  private final StockRepository stockRepository;
+    private StockRepository stockRepository;
 
-  @Transactional
-  public synchronized void decrease(Long id, Long quantity) {
+    public StockService(StockRepository stockRepository) {
+        this.stockRepository = stockRepository;
+    }
 
-      //get stock
-      //재고감소
-      //저장
+    public void decrease(Long id, Long quantity) {
 
-    Stock stock = stockRepository.findById(id).orElseThrow();
+        Stock stock = stockRepository.findById(id).orElseThrow();
 
-    stock.decrease(quantity);
+        stock.decrease(1L);
 
-    stockRepository.saveAndFlush(stock);
-  }
+        stockRepository.saveAndFlush(stock);
 
-  @Transactional(propagation = Propagation.REQUIRES_NEW)
-  public void decreasePropagationRequiresNew(Long id, Long quantity) {
-    Stock stock = stockRepository.findById(id).orElseThrow();
-
-    stock.decrease(quantity);
-
-    stockRepository.saveAndFlush(stock);
-  }
-
-  @Transactional
-  public StockDTO getStock(Long id) {
-
-    Stock stock = stockRepository.findByProductId(id);
-
-    return new StockDTO(stock.getId(), stock.getProductId(), stock.getQuantity());
-  }
+    }
 
 }
