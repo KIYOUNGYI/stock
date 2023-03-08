@@ -5,10 +5,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import lombok.Getter;
+import lombok.ToString;
+
 import javax.persistence.Version;
 
 @Entity
 @Getter
+@ToString
 public class Stock {
 
   @Id
@@ -26,6 +29,12 @@ public class Stock {
   }
 
   public Stock(Long productId, Long quantity) {
+    this.productId = productId;
+    this.quantity = quantity;
+  }
+
+  public Stock(Long id, Long productId, Long quantity) {
+    this.id = id;
     this.productId = productId;
     this.quantity = quantity;
   }

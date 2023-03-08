@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.example.stock.domain.Stock;
 import com.example.stock.repository.StockRepository;
+
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -22,9 +24,10 @@ class PessimisticStockServiceTest {
   @Autowired
   private StockRepository stockRepository;
 
+  Stock stock;
   @BeforeEach
   public void before() {
-    Stock stock = new Stock(1l, 100l);
+    stock = new Stock(1l, 100l);
     stockRepository.saveAndFlush(stock);
   }
 
@@ -48,6 +51,8 @@ class PessimisticStockServiceTest {
   @Test
   public void 동시에_100개의_요청() throws InterruptedException {
 
+    Long id = stock.getId();
+
     int threadCount = 100;
     ExecutorService executorService = Executors.newFixedThreadPool(16);
     // 100개 요청 끝날때까지 기달려야 하므로 countLatch 사용
@@ -60,7 +65,7 @@ class PessimisticStockServiceTest {
           () -> {
 
             try {
-              stockService.decrease(1l, 1l);
+              stockService.decrease(id, 1l);
             } finally {
               latch.countDown();
             }
@@ -70,8 +75,9 @@ class PessimisticStockServiceTest {
     }
     latch.await();
     //모은 요청이 완료되면 stockRepository 를 통해 값을 비교해줌
-
-    Stock stock = stockRepository.findById(1l).orElseThrow();
+    List<Stock> all = stockRepository.findAll();
+    System.out.println("all = " + all.toString());
+    Stock stock = stockRepository.findById(id).orElseThrow();
     //100 - (100) == 0 <- 기대값
     assertEquals(0l, stock.getQuantity());
 
